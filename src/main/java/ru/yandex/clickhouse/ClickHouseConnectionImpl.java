@@ -9,7 +9,7 @@ import ru.yandex.clickhouse.except.ClickHouseUnknownException;
 import ru.yandex.clickhouse.settings.ClickHouseConnectionSettings;
 import ru.yandex.clickhouse.settings.ClickHouseProperties;
 import ru.yandex.clickhouse.util.ClickHouseHttpClientBuilder;
-import ru.yandex.clickhouse.util.LogProxy;
+import ru.yandex.clickhouse.util.LogAndInstrumentationProxy;
 import ru.yandex.clickhouse.util.TypeUtils;
 import ru.yandex.clickhouse.util.guava.StreamUtils;
 
@@ -99,7 +99,7 @@ public class ClickHouseConnectionImpl implements ClickHouseConnection {
 
     @Override
     public ClickHouseStatement createStatement() throws SQLException {
-        return LogProxy.wrap(ClickHouseStatement.class, new ClickHouseStatementImpl(httpclient, this, properties));
+        return LogAndInstrumentationProxy.wrap(ClickHouseStatement.class, new ClickHouseStatementImpl(httpclient, this, properties), properties.isUseInstrumentation());
     }
 
     @Deprecated
@@ -114,15 +114,15 @@ public class ClickHouseConnectionImpl implements ClickHouseConnection {
     }
 
     private ClickHouseStatement createClickHouseStatement(CloseableHttpClient httpClient) throws SQLException {
-        return LogProxy.wrap(ClickHouseStatement.class, new ClickHouseStatementImpl(httpClient, this, properties));
+        return LogAndInstrumentationProxy.wrap(ClickHouseStatement.class, new ClickHouseStatementImpl(httpClient, this, properties), properties.isUseInstrumentation());
     }
 
     public PreparedStatement createPreparedStatement(String sql) throws SQLException {
-        return LogProxy.wrap(PreparedStatement.class, new ClickHousePreparedStatementImpl(httpclient, this, properties, sql, getTimeZone()));
+        return LogAndInstrumentationProxy.wrap(PreparedStatement.class, new ClickHousePreparedStatementImpl(httpclient, this, properties, sql, getTimeZone()), properties.isUseInstrumentation());
     }
 
     public ClickHousePreparedStatement createClickHousePreparedStatement(String sql) throws SQLException {
-        return LogProxy.wrap(ClickHousePreparedStatement.class, new ClickHousePreparedStatementImpl(httpclient, this, properties, sql, getTimeZone()));
+        return LogAndInstrumentationProxy.wrap(ClickHousePreparedStatement.class, new ClickHousePreparedStatementImpl(httpclient, this, properties, sql, getTimeZone()), properties.isUseInstrumentation());
     }
 
 
@@ -208,7 +208,7 @@ public class ClickHouseConnectionImpl implements ClickHouseConnection {
 
     @Override
     public DatabaseMetaData getMetaData() throws SQLException {
-        return LogProxy.wrap(DatabaseMetaData.class, new ClickHouseDatabaseMetadata(url, this));
+        return LogAndInstrumentationProxy.wrap(DatabaseMetaData.class, new ClickHouseDatabaseMetadata(url, this), properties.isUseInstrumentation());
     }
 
     @Override

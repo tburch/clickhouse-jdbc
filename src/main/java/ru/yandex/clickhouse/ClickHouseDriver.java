@@ -8,7 +8,7 @@ import ru.yandex.clickhouse.settings.ClickHouseConnectionSettings;
 import ru.yandex.clickhouse.settings.ClickHouseProperties;
 import ru.yandex.clickhouse.settings.ClickHouseQueryParam;
 import ru.yandex.clickhouse.settings.DriverPropertyCreator;
-import ru.yandex.clickhouse.util.LogProxy;
+import ru.yandex.clickhouse.util.LogAndInstrumentationProxy;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +57,7 @@ public class ClickHouseDriver implements Driver {
         logger.info("Creating connection");
         ClickHouseConnectionImpl connection = new ClickHouseConnectionImpl(url, properties);
         registerConnection(connection);
-        return LogProxy.wrap(ClickHouseConnection.class, connection);
+        return LogAndInstrumentationProxy.wrap(ClickHouseConnection.class, connection, properties.isUseInstrumentation());
     }
 
     private void registerConnection(ClickHouseConnectionImpl connection) {
