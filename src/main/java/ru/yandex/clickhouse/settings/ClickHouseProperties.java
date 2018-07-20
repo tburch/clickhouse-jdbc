@@ -34,6 +34,7 @@ public class ClickHouseProperties {
     private String useTimeZone;
     private boolean useServerTimeZoneForDates;
     private boolean useObjectsInArrays;
+    private boolean useInstrumentation;
 
     // queries settings
     private Integer maxParallelReplicas;
@@ -132,6 +133,7 @@ public class ClickHouseProperties {
         ret.put(ClickHouseConnectionSettings.USE_TIME_ZONE.getKey(), String.valueOf(useTimeZone));
         ret.put(ClickHouseConnectionSettings.USE_SERVER_TIME_ZONE_FOR_DATES.getKey(), String.valueOf(useServerTimeZoneForDates));
         ret.put(ClickHouseConnectionSettings.USE_OBJECTS_IN_ARRAYS.getKey(), String.valueOf(useObjectsInArrays));
+        ret.put(ClickHouseConnectionSettings.USE_INSTRUMENTATION.getKey(), String.valueOf(useInstrumentation));
 
         ret.put(ClickHouseQueryParam.MAX_PARALLEL_REPLICAS.getKey(), maxParallelReplicas);
         ret.put(ClickHouseQueryParam.TOTALS_MODE.getKey(), totalsMode);
@@ -181,6 +183,7 @@ public class ClickHouseProperties {
         setUseTimeZone(properties.useTimeZone);
         setUseServerTimeZoneForDates(properties.useServerTimeZoneForDates);
         setUseObjectsInArrays(properties.useObjectsInArrays);
+        setUseInstrumentation(properties.useInstrumentation);
         setMaxParallelReplicas(properties.maxParallelReplicas);
         setTotalsMode(properties.totalsMode);
         setQuotaKey(properties.quotaKey);
@@ -492,6 +495,14 @@ public class ClickHouseProperties {
 
     public void setUseObjectsInArrays(boolean useObjectsInArrays) {
         this.useObjectsInArrays = useObjectsInArrays;
+    }
+
+    public void setUseInstrumentation(boolean useInstrumentation) {
+        this.useInstrumentation = useInstrumentation;
+    }
+
+    public boolean isUseInstrumentation() {
+        return useInstrumentation;
     }
 
     public boolean isUseServerTimeZoneForDates() {

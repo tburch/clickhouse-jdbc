@@ -1,5 +1,8 @@
 package ru.yandex.clickhouse.util;
 
+import com.codahale.metrics.SharedMetricRegistries;
+import com.codahale.metrics.httpclient.HttpClientMetricNameStrategies;
+import com.codahale.metrics.httpclient.InstrumentedHttpClients;
 import org.apache.http.HeaderElement;
 import org.apache.http.HeaderElementIterator;
 import org.apache.http.HttpResponse;
@@ -50,7 +53,12 @@ public class ClickHouseHttpClientBuilder {
     }
 
     public CloseableHttpClient buildClient() throws Exception {
-        return HttpClientBuilder.create()
+        HttpClientBuilder builder = properties.isUseInstrumentation() ?
+                                            InstrumentedHttpClients.custom(SharedMetricRegistries.getDefault(),
+                                                    HttpClientMetricNameStrategies.HOST_AND_METHOD) :
+                                            HttpClientBuilder.create();
+
+        return builder
                 .setConnectionManager(getConnectionManager())
                 .setKeepAliveStrategy(createKeepAliveStrategy())
                 .setDefaultConnectionConfig(getConnectionConfig())
